@@ -18,10 +18,9 @@ namespace Foundatio.AzureServiceBus.Tests.Queue {
 
         protected override IQueue<SimpleWorkItem> GetQueue(int retries = 1, TimeSpan? workItemTimeout = null, TimeSpan? retryDelay = null, int[] retryMultipliers = null, int deadLetterMaxItems = 100, bool runQueueMaintenance = true) {
             string connectionString = Configuration.GetConnectionString("AzureServiceBusConnectionString");
-            if (String.IsNullOrEmpty(connectionString))
-                return null;
+             Assert.False(String.IsNullOrEmpty(connectionString), "AzureServiceBusConnectionString must be specified in the appsettings.json file");
 
-            // TODO: Respect retryMultipliers
+             // TODO: Respect retryMultipliers
             var retryPolicy = retryDelay.GetValueOrDefault() > TimeSpan.Zero
                 ? new RetryExponential(retryDelay.GetValueOrDefault(), retryDelay.GetValueOrDefault() + retryDelay.GetValueOrDefault(), retries + 1)
                 : RetryPolicy.NoRetry;
